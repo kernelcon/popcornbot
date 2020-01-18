@@ -15,13 +15,6 @@ SSD1306Wire display(0x3c, 4, 5, GEOMETRY_128_32);
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
-//const char* host = "172.20.10.3";
-//const uint16_t port = 8080;
-
-//const char* host = "popcornapi.glitch.me";
-//const uint16_t port = 80;
-
-
 int buttonState = 0;
 int buttonMillis = 0;
 int buttonCount = 0;
@@ -140,8 +133,6 @@ void setup() {
                 const String& payload = http.getString();
                 Serial.println("received payload:\n<<");
 
-//                char json[] = payload;
-//                JsonObject& root = jsonBuffer.parseObject(payload);
                 DeserializationError error = deserializeJson(doc, payload);
 
                 if (error) {
@@ -201,8 +192,6 @@ void pushcount() {
             display.display();
           
             // Use WiFiClient class to create TCP connections
-//            WiFiClient client;
-
             std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
             client->setFingerprint(fingerprint);
             HTTPClient http;
@@ -258,8 +247,6 @@ void loop() {
             if (buttonCount > pushedCount) { pushcount(); }
       } else {
             display.clear();
-//          display.setFont(ArialMT_Plain_16);
-//          display.drawString(64, 8, WiFi.localIP().toString());
             display.setFont(ArialMT_Plain_16);
             display.drawString(64, 8, "POPCORN! ("+String(buttonCount)+")");
             display.display();
