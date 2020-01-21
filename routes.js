@@ -1,3 +1,5 @@
+var strings = require("./strings.js");
+
 //require filesystem for writing state
 var fs = require("fs");
 //keep track of state in memory
@@ -15,6 +17,26 @@ function slackmsg(msg) {
   slack.send({
     text: msg
   });
+}
+
+function saysomething(phrasetype,machine="",count=0) {
+  switch (phrasetype) {
+    case "demand":
+      machine == "A" ? machine = "Orville" : machine = "Vic";
+      var slave = strings.slaveNames[Math.floor(Math.random()*strings.slaveNames.length)];
+      var demand = strings.cornDemands[Math.floor(Math.random()*strings.cornDemands.length)].replace("$machine",machine).replace("$slave",slave);
+      slackmsg(demand+" _("+count+" requests)_");
+      break;
+    case "proclaim":
+      var fact = strings.cornFacts[Math.floor(Math.random()*strings.cornFacts.length)];
+      slackmsg("My humble subjects, I bestow upon you my wisdom: "+fact);
+      break;
+    case "entertain":
+      var vid = strings.ytVideos[Math.floor(Math.random()*strings.ytVideos.length)];
+      slackmsg("Jester brings entertainment! "+vid);
+      break;
+  }
+    
 }
 
 //loads states from filesystem into memory when the project restarts
@@ -59,13 +81,7 @@ var routes = function(app) {
         ".data/" + req.body.machine + ".json",
         JSON.stringify(req.body)
       );
-      slackmsg(
-        "*POPCORN SLAVE!* MACHINE " +
-          req.body.machine +
-          " NEEDS MOAARR POPCORN! _(" +
-          req.body.count +
-          " requests)_"
-      );
+      saysomething("demand",req.body.machine,req.body.count);
       return res.send(req.body);
     }
   });

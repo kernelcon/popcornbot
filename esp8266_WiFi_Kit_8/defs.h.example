@@ -1,15 +1,15 @@
-//PUT ALL THE SECRETS IN HERE AND RENAME IT TO defs.h
+//IGNORE THIS FILE WHEN PUSHING TO GIT
 #ifndef STASSID
 //WIFI AP
-#define STASSID "##SSID NAME##"
-#define STAPSK  "##SSID PASSWORD##"
+#define STASSID "<SSID NAME>"
+#define STAPSK  "<SSID PASSWORD>"
 #endif
 //CURRENTLY ONLY "A" and "B" ARE ALLOWED.
-#define MACHINE_ID "#"
+#define MACHINE_ID "B"
 //TOKEN AS DEFINED IN SERVER ENV 
-#define API_TOKEN "##SECURE TOKEN##"
+#define API_TOKEN "<SECURE TOKEN>"
 //API ENDPOINTS
-#define POST_ENDPOINT "##API URL##"
-#define GET_ENDPOINT "##API URL##"+String(MACHINE_ID)
-//SHA1 fingerprint for your API endpoint
+#define POST_ENDPOINT "<API URL>"
+#define GET_ENDPOINT "<API URL>"+String(MACHINE_ID)
+//SHA1 fingerprint
 const uint8_t fingerprint[20] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
