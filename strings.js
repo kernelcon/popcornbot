@@ -12,7 +12,7 @@ module.exports = {
     "$slave The people have spoken, and they have told me that you have failed to keep them well fed. Do not let me see your face until $machine is refilled.",
     "$slave IT was SUCH A LOVELY DAY until I had to deal with your *incompetence*, refille $machine at once!",
     "$slave Begone! $machine requires popcorn!",
-    "Praise Be!  Orville requires more sacrifices Popcorn slave, please submit your purest of kernels."
+    "Praise Be!  $machine requires more sacrifices Popcorn slave, please submit your purest of kernels."
   ],
 
   ytVideos: ["https://www.youtube.com/watch?v=NjxNnqTcHhg"],
