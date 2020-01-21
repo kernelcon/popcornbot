@@ -3,7 +3,8 @@ module.exports = {
     "POPCORN SLAVE! ",
     "POPCORN SLAVE, you incompetent fool! ",
     "Popcorn slave, you disaster of a human...",
-    "Popcorn slave, my loyal servant, "
+    "Popcorn slave, my loyal servant, ",
+    "Hey nincompoop, you silly popcorn slave..." 
   ],
 
   cornDemands: [
