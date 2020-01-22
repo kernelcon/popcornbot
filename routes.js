@@ -20,9 +20,9 @@ function slackmsg(msg) {
 }
 
 function saysomething(phrasetype,machine="",count=0) {
+  machine == "A" ? machine = "Orville" : machine = "Vic";
   switch (phrasetype) {
     case "demand":
-      machine == "A" ? machine = "Orville" : machine = "Vic";
       var slave = strings.slaveNames[Math.floor(Math.random()*strings.slaveNames.length)];
       var demand = strings.cornDemands[Math.floor(Math.random()*strings.cornDemands.length)].replace("$machine",machine).replace("$slave",slave);
       slackmsg(demand+" _("+count+" requests)_");
@@ -34,6 +34,10 @@ function saysomething(phrasetype,machine="",count=0) {
     case "entertain":
       var vid = strings.ytVideos[Math.floor(Math.random()*strings.ytVideos.length)];
       slackmsg("Jester brings entertainment! "+vid);
+      break;
+    case "thank":
+      var thanks = strings.cornThanks[Math.floor(Math.random()*strings.cornThanks.length)].replace("$machine",machine).replace("$slave",slave);
+      slackmsg(thanks);
       break;
   }
     
@@ -86,6 +90,18 @@ var routes = function(app) {
     }
   });
 
+  app.post("/popcorn/thanks", function(req, res) {
+    //we need to do input validation on req.body so somebody doesn't hax us
+    if (!req.body.machine || req.body.auth != AUTH_TOKEN) {
+      console.log("Received incomplete POST: " + JSON.stringify(req.body));
+      return res.send({ status: "error", message: "missing parameter(s)" });
+    } else {
+      console.log("Received POST: " + JSON.stringify(req.body));
+      saysomething("thank",req.body.machine);
+      return res.send(req.body);
+    }
+  });  
+
   //
   // GET requests return the current state.  no auth required.  this is used when the machines boot and for dashboards
   // can probably combine these if I get smart
@@ -109,3 +125,4 @@ var routes = function(app) {
 };
 
 module.exports = routes;
+

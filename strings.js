@@ -17,6 +17,8 @@ module.exports = {
   ],
 
   ytVideos: ["https://www.youtube.com/watch?v=NjxNnqTcHhg"],
+  
+  cornThanks: ["My people, thank the PopcornBot, for $machine has been replenished. Popcorn will be flowing from its bowels shortly!"],
 
   cornFacts: [
     "Iowa has bad corn",
