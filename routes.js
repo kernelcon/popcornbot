@@ -19,28 +19,60 @@ function slackmsg(msg) {
   });
 }
 
-function saysomething(phrasetype,machine="",count=0) {
-  machine == "A" ? machine = "Orville" : machine = "Vic";
+function testme() {
+  slack.send({
+    text: "Current server stats",
+    fields: {
+      "CPU usage": "7.51%",
+      "Memory usage": "254mb"
+    }
+  });
+}
+// testme();
+
+function saysomething(phrasetype, machine = "", count = 0) {
+  machine == "A" ? (machine = "Sir Orville") : (machine = "Sir Vic");
   switch (phrasetype) {
     case "demand":
-      var slave = strings.slaveNames[Math.floor(Math.random()*strings.slaveNames.length)];
-      var demand = strings.cornDemands[Math.floor(Math.random()*strings.cornDemands.length)].replace("$machine",machine).replace("$slave",slave);
-      slackmsg(demand+" _("+count+" requests)_");
+      var greeting =
+        strings.cornGreetings[
+          Math.floor(Math.random() * strings.cornGreetings.length)
+        ];
+      var demand = strings.cornDemands[
+        Math.floor(Math.random() * strings.cornDemands.length)
+      ]
+        .replace("$machine", machine)
+        .replace("greeting", greeting);
+      slackmsg(demand + " _(" + count + " requests)_");
       break;
     case "proclaim":
-      var fact = strings.cornFacts[Math.floor(Math.random()*strings.cornFacts.length)];
-      slackmsg("My humble subjects, I bestow upon you my wisdom: "+fact);
+      var fact =
+        strings.cornFacts[Math.floor(Math.random() * strings.cornFacts.length)];
+      slackmsg("My humble subjects, I bestow upon you my wisdom: " + fact);
       break;
     case "entertain":
-      var vid = strings.ytVideos[Math.floor(Math.random()*strings.ytVideos.length)];
-      slackmsg("Jester brings entertainment! "+vid);
+      var vid =
+        strings.ytVideos[Math.floor(Math.random() * strings.ytVideos.length)];
+      slackmsg("Jester brings entertainment! " + vid);
       break;
     case "thank":
-      var thanks = strings.cornThanks[Math.floor(Math.random()*strings.cornThanks.length)].replace("$machine",machine).replace("$slave",slave);
+      var thanks = strings.cornThanks[
+        Math.floor(Math.random() * strings.cornThanks.length)
+      ]
+        .replace("$machine", machine)
+        .replace("greeting", greeting);
       slackmsg(thanks);
       break;
+    case "stats":
+      slack.send({
+        text: "Current popcorn stats",
+        fields: {
+          "Sir Orville": popCount["A"]+" requests",
+          "Sir Vic": popCount["B"]+" requests"
+        }
+      });
+      break;
   }
-    
 }
 
 //loads states from filesystem into memory when the project restarts
@@ -59,7 +91,6 @@ function loadFileData() {
 }
 
 loadFileData();
-
 
 var routes = function(app) {
   //
@@ -85,7 +116,7 @@ var routes = function(app) {
         ".data/" + req.body.machine + ".json",
         JSON.stringify(req.body)
       );
-      saysomething("demand",req.body.machine,req.body.count);
+      saysomething("demand", req.body.machine, req.body.count);
       return res.send(req.body);
     }
   });
@@ -97,14 +128,20 @@ var routes = function(app) {
       return res.send({ status: "error", message: "missing parameter(s)" });
     } else {
       console.log("Received POST: " + JSON.stringify(req.body));
-      saysomething("thank",req.body.machine);
+      saysomething("thank", req.body.machine);
       return res.send(req.body);
     }
-  });  
+  });
 
   //
   // GET requests return the current state.  no auth required.  this is used when the machines boot and for dashboards
   // can probably combine these if I get smart
+  app.post("/popcorn/stats", function(req, res) {
+    saysomething("stats");
+    console.log("Received GET: " + JSON.stringify(req.body));
+    return res.send("");
+  });
+
   app.get("/popcorn/A", function(req, res) {
     var dummyData = {
       machine: "A",
@@ -125,4 +162,3 @@ var routes = function(app) {
 };
 
 module.exports = routes;
-

@@ -59,13 +59,6 @@ void setup() {
     delay(1000);
   }
 
-  //set up hall effect sensor
-
-//Swap RX to gpio
-  pinMode(3, FUNCTION_3);
-  pinMode (3, INPUT);
-  digitalWrite (3, HIGH);
-
   //set up button - d3 is also gpio0
   pinMode(D3, INPUT);
   attachInterrupt(digitalPinToInterrupt(D3),pinWatch,CHANGE);
@@ -73,10 +66,6 @@ void setup() {
   //set up LED
   pinMode(D6, OUTPUT);
   digitalWrite(D6, LOW);
-
-  //set up BEACON
-  pinMode(D8, OUTPUT);
-  digitalWrite(D8, LOW);
 
   //Manual reset of the OLED display
   pinMode(16, OUTPUT);
@@ -175,10 +164,7 @@ void setup() {
 }
 
 void playtune() {
-  //turn on beacon
-  digitalWrite(D8, HIGH);
-
-  // iterate over the notes of the melody:
+      // iterate over the notes of the melody:
   for (int thisNote = 0; thisNote < 31; thisNote++) {
 
     // to calculate the note duration, take one second divided by the note type.
@@ -197,9 +183,6 @@ void playtune() {
     // stop the tone playing:
     noTone(D7);
   }
-  //turn off beacon
-//  digitalWrite(D8, LOW);
-  
 }
 
 void pushcount() {
@@ -251,50 +234,7 @@ void pushcount() {
             display.display();
 }
 
-void giveThanks() {
-          
-            // Use WiFiClient class to create TCP connections
-            std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
-            client->setFingerprint(fingerprint);
-            HTTPClient http;
-
-
-            Serial.print("[HTTP] begin...\n");
-            // configure traged server and url
-            http.begin(*client, String(POST_ENDPOINT)+"/thanks"); //HTTP
-            http.addHeader("Content-Type", "application/json");
-            int httpCode = http.POST("{\"machine\":\""+String(MACHINE_ID)+"\",\"auth\":\""+String(API_TOKEN)+"\"}");
-
-            // httpCode will be negative on error
-            if (httpCode > 0) {
-              // HTTP header has been send and Server response header has been handled
-              Serial.printf("[HTTP] POST... code: %d\n", httpCode);
-        
-              // file found at server
-              if (httpCode == HTTP_CODE_OK) {
-                const String& payload = http.getString();
-                Serial.println("received payload:\n<<");
-                Serial.println(payload);
-                Serial.println(">>");
-              }
-            } else {
-                  Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
-                  return;
-            }
-
-            http.end();
-}
-
-
 void loop() {
-
-       //turn off beacon
-      if (digitalRead(3) == LOW) {
-        if (digitalRead(D8) == HIGH) {
-        digitalWrite(D8, LOW);  
-        giveThanks();
-        }
-        }
 
       // check if the pushbutton is pressed.
       // if it is, the buttonState is LOW:
